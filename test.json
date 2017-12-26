@@ -1,0 +1,15 @@
+[
+    {
+        "author": "author",
+        "descr": "good",
+        "genre": "prose",
+        "name": "book",
+        "year": "2004"
+    },
+    {
+        "descr": "good",
+        "name": "storybook",
+        "names": "books",
+        "year": "2001"
+    }
+]

@@ -1,6 +1,7 @@
 #include "storybook.h"
 #include "book.h"
 #include "tree.h"
+#include<QRegExp>
 
 Storybook::Storybook()
 {
@@ -15,7 +16,7 @@ Storybook::Storybook(const QString &name_, const int &year_, const QString &desc
     this->setDescr(descr_);
 }
 
-Storybook::Storybook(Storybook &otherStorybook)
+Storybook::Storybook(const Storybook &otherStorybook)
 {
     name = otherStorybook.name;
     year = otherStorybook.year;
@@ -30,17 +31,30 @@ Storybook::~Storybook()
 
 void Storybook::setNames(const QString &names)
 {
-    //QRegExp regNames("^\\w+$");
-    if (names != NULL){
+    QRegExp regNames("^\\S+$");
+    if (regNames.exactMatch(names.toLower())){
         this->names = names;
     }
     else{
-        //qDebug() << "Incorrect name";
-        this->names = "No books in this Storybook:(";
+        this->names = "Unknown author";
     }
 }
 
-QString Storybook::getNames()
+QString Storybook::getNames() const
 {
     return this->names;
+}
+
+bool Storybook::isBook()
+{
+    return false;
+}
+
+void Storybook::toJsonObject(QJsonObject& json)
+{
+    json.insert("name", name);
+    json.insert("names", names);
+    json.insert("descr", descr);
+    QString str =  QString::number(year);
+    json.insert("year", str);
 }

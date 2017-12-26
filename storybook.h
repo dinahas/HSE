@@ -16,14 +16,15 @@ public:
             const int& year,
             const QString& descr,
             const QString& names);
-    Storybook(Storybook &otherStorybook);
+    Storybook(const Storybook &otherStorybook);
     ~Storybook();
     void setNames(const QString& names);
-    QString getNames();
+    QString getNames() const;
+    virtual bool isBook();
+    /*virtual*/ void toJsonObject(QJsonObject& json);
 
 private:
-    QString name, names, descr;
-    int year;
+    QString names;
 };
 
 #endif // STORYBOOK_H

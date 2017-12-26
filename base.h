@@ -9,14 +9,16 @@ class Base
 {
 public:
     //Base();
-    void setName(const QString &name);
-    void setDescr(const QString &descr);
-    void setYear(const int &year);
-    QString getName();
-    QString getDescr();
-    int getYear();
+    virtual void setName(const QString &name);
+    virtual void setDescr(const QString &descr);
+    virtual void setYear(const int &year);
+    virtual QString getName() const;
+    virtual QString getDescr() const;
+    virtual int getYear() const;
+    //virtual void toJsonObject();
+    virtual bool isBook() = 0;
 
-private:
+protected:
     QString name, descr;
     int year;
 };

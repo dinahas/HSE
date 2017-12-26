@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include "book.h"
+#include "base.h"
 #include "QString"
 #include <iostream>
 //#include "cstddef"
@@ -10,7 +11,8 @@ class Node
 {
 public:
     //Node();
-    Book book;
+    //Book book;
+    Base* data;
     QString key;
     Node *left, *right, *curr;
     int height;

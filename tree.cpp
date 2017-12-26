@@ -39,7 +39,7 @@ Node* Tree::nodecopy(Node* root){
     else
     {
         temp = new Node;
-        temp->book = root->book;
+        temp->data = root->data;
         temp->left = nodecopy(root->left);
         temp->right = nodecopy(root->right);
         return temp;
@@ -71,7 +71,18 @@ void Tree::save(QString filename) {
         Node* temp = root;
         while (temp != NULL) {
             QJsonObject toWrite;
-            temp->book.toJsonObject(toWrite);
+            Book* book;
+            Storybook* storybook;
+            if (temp->data->isBook())
+            {
+                book = static_cast<Book*>(temp->data);
+                book->toJsonObject(toWrite);
+            }
+            else
+            {
+                storybook = static_cast<Storybook*>(temp->data);
+                storybook->toJsonObject(toWrite);
+            }
             array.push_back(QJsonValue (toWrite));
             temp = getNext(temp);
         }
@@ -85,14 +96,26 @@ void Tree::save(QString filename) {
     }
 }
 
-Book Tree::find(QString name) const{
+Base* Tree::find(QString name) const{
     Node* temp = findRoot(root, name);
-    Book tempbook;
     //return temp==NULL ? temp->book : tempbook;
     if (temp == NULL)
-        return tempbook;
+        return NULL;
     else
-        return temp->book;
+        return temp->data;/*
+    {
+        if (temp->data->isBook())
+        {
+            temp->data = static_cast<Book*>(tree.find(name));
+            //temp->data = new Book(static_const<Book*>(tree.find(name)));
+        }
+        else
+        {
+            temp = static_cast<Storybook*>(tree.find(name));
+            book = new Storybook(dynamic_const<Storybook*>(tree.find(name)));
+        }
+        return temp->data;
+    }*/
 }
 
 Node* Tree::findRoot(Node* _root, QString name) const {
@@ -115,18 +138,21 @@ void Tree::deleteOne(Node *root){
             d=root;
             delete d;
             root=NULL;
+            //root->isLeaf = true;
         }
         else if (root->left == NULL)
         {
             d=root;
             delete d;
             root=root->right;
+            root->isLeaf = true;
         }
         else if (root->right == NULL)
         {
             d=root;
             root=root->left;
             delete d;
+            root->isLeaf = true;
         }
 }
 
@@ -135,19 +161,21 @@ void Tree::keyDelete(QString name)
     Node* delNode = NULL;
     delNode = findRoot(root, name);
     if(delNode){
+        delete delNode->data;
         deleteOne(delNode);
         count--;
-        qDebug() <<"deteted";
+        qDebug() <<"deleted";
     }
     else qDebug() <<"No key";
 }
 
-void Tree::keyInsert(Book& book)
+void Tree::keyInsert(const Book& book)
 {
     QString name = book.getName();
     Node* nex = findRoot(root, name);
     if(!nex){
-        insert(book, name);
+        Base *base = new Book(book);
+        insert(base, name);
         count++;
     }
     qDebug() <<"Work";
@@ -155,9 +183,23 @@ void Tree::keyInsert(Book& book)
 
 }
 
-void Tree::insert(Book& book, QString name){
+void Tree::keyInsert(const Storybook& book)
+{
+    QString name = book.getName();
+    Node* nex = findRoot(root, name);
+    if(!nex){
+        Base *base = new Storybook(book);
+        insert(base, name);
+        count++;
+    }
+    qDebug() <<"Work";
+    qDebug() <<(bsheight(root->left) + bsheight(root->right) + 1);
+
+}
+
+void Tree::insert(Base* book, QString name){
     Node* temp = new Node;
-    temp->book = book;
+    temp->data = book;
     temp->key = name;
     if (!root) root = temp;
     else{
@@ -281,7 +323,7 @@ Node* Tree::getNext(Node *n)
         while(!next->left->isLeaf) next = next->left;
         return next;
     }
-    else if(n->curr->left==n) return next->curr;
+    else if(n->left==n) return next;
     //else if(n->curr->curr&&n->curr->curr->left==n->curr) return next->curr;
     else return NULL;
 }
@@ -296,4 +338,21 @@ QString Tree::nameGet()
         r = getNext(r);
     }
     return names;
+}
+
+Node* Tree::getRoot()
+{
+    Node* r = root;
+    //r = getNext(r);
+    return r;
+}
+
+Node* Tree::getChild(Node* rt)
+{
+    Node* r = rt;
+    if (r)
+        r = getNext(r);
+    else
+        r = NULL;
+    return r;
 }

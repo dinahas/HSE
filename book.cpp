@@ -18,7 +18,7 @@ Book::Book(const QString &author, const QString &name, const QString &genre, con
     //qDebug() << "Debug:  The initialization (int, QString)constructor is called";
 }
 
-Book::Book(Book &otherBooks){
+Book::Book(const Book &otherBooks){
     author = otherBooks.author;
     name = otherBooks.name;
     genre = otherBooks.genre;
@@ -56,17 +56,17 @@ void Book::setGenre(const QString &genre){
     //qDebug() << "Debug: setGenre is called";
 }
 
-QString Book::getAuthor(){
+QString Book::getAuthor() const{
     //qDebug() << "Debug: getAuthor is called";
     return this->author;
 }
 
-QString Book::getGenre(){
+QString Book::getGenre() const {
     //qDebug() << "Debug: getGenre is called";
     return this->genre;
 }
 
-void Book::toJsonObject(QJsonObject& json) const {
+void Book::toJsonObject(QJsonObject& json) {
     json.insert("name", name);
     json.insert("author", author);
     json.insert("genre", genre);
@@ -75,3 +75,7 @@ void Book::toJsonObject(QJsonObject& json) const {
     json.insert("year", str);
 }
 
+bool Book::isBook()
+{
+    return true;
+}

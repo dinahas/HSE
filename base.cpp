@@ -33,17 +33,18 @@ void Base::setYear(const int &year){
     //qDebug() << "Debug: setYear is called";
 }
 
-QString Base::getName(){
+QString Base::getName() const{
     //qDebug() << "Debug: getName is called";
     return this->name;
 }
 
-QString Base::getDescr(){
+QString Base::getDescr() const{
     //qDebug() << "Debug: getDescr is called";
     return this->descr;
 }
 
-int Base::getYear(){
+int Base::getYear() const{
     //qDebug() << "Debug: getYear is called";
     return this->year;
 }
+
